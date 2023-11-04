@@ -1,0 +1,35 @@
+package com.ecommerce.inventory;
+
+import com.ecommerce.inventory.model.Inventory;
+import com.ecommerce.inventory.repository.InventoryRepository;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class InventoryServiceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(InventoryServiceApplication.class, args);
+    }
+
+    @Bean
+    public CommandLineRunner loadData(InventoryRepository repository) {
+        return args -> {
+            if (repository.findAll().isEmpty()) {
+                Inventory inventory = Inventory.builder()
+                        .quantity(10)
+                        .skuCode("123456")
+                        .build();
+                repository.save(inventory);
+
+                inventory = Inventory.builder()
+                        .quantity(0)
+                        .skuCode("123")
+                        .build();
+                repository.save(inventory);
+            }
+        };
+    }
+}
